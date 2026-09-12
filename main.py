@@ -1,6 +1,8 @@
-def main():
-    print("Hello from sqlanalystagent!")
+import os
+from fastapi import FastAPI
+from dotenv import load_dotenv
+from src.tools.database import execute_sql
 
-
-if __name__ == "__main__":
-    main()
+load_dotenv()
+app = FastAPI(debug=os.getenv("DEBUG", "False").lower() == "true")
+execute_sql('SELECT COUNT(*) FROM products')
