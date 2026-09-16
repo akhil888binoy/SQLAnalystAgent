@@ -1,5 +1,5 @@
-
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter
+from pydantic import BaseModel
 from langchain.messages import HumanMessage
 from src.agent.agent import agent
 
@@ -9,17 +9,15 @@ analyst_router = APIRouter(
 )
 
 
+class AnalysisRequest(BaseModel):
+    question: str
+
+
 @analyst_router.post("/")
-def get_analysis(request):
-
-    messages = [HumanMessage(content=request)]
-
+def get_analysis(request: AnalysisRequest):
     result = agent.invoke({
-        "messages": messages
+        "messages": [HumanMessage(content=request.question)]
     })
-
-    for message in result["messages"]:
-        message.pretty_print()
 
     return {
         "answer": result["messages"][-1].content
