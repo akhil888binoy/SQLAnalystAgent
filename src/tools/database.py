@@ -1,17 +1,29 @@
-
+from sqlalchemy import text
 from src.database.database import SessionLocal
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy import  text
+from src.tools.sql_validator import validate_sql
+from langchain.tools import tool
 
-def execute_sql( query ):
+@tool
+def execute_sql(query):
+    """Execute a validated read-only SQL query against the database and return the query results."""
+    validation = validate_sql(query)
+
+    if not validation["valid"]:
+        return {
+            "error": validation["reason"]
+        }
 
     session = SessionLocal()
-    result =[]
+    result = []
+
     try:
         rows = session.execute(text(query))
-        for row in rows :
-            result.append(row)
+
+        for row in rows:
+            result.append(dict(row._mapping))
+    except Exception as e:
+        return {"error": str(e)}
     finally:
         session.close()
-    print(result)
+
     return result

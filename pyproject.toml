@@ -8,8 +8,12 @@ dependencies = [
     "alembic>=1.19.2",
     "datetime>=6.0",
     "fastapi>=0.141.1",
+    "langchain>=1.4.0",
+    "langchain-openai>=1.6.2",
     "psycopg2-binary>=2.9.13",
+    "pydantic>=2.13.5",
     "python-dotenv>=1.2.3",
     "sqlalchemy>=2.0.52",
-    "uvicorn>=0.52.4",
+    "sqlglot>=30.18.0",
+    "uvicorn==0.52.0",
 ]
